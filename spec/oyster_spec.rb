@@ -1,7 +1,9 @@
 require 'oyster.rb'
+require 'journey.rb'
 
 describe Oyster do
     let(:station){ double :station, :touch_in => true, :touch_out => true }
+    let(:journey) {double :journey}
 
   context '#check_balance' do
     it 'return balance when customer calls check_balance method' do
@@ -22,18 +24,42 @@ describe Oyster do
     end
 
     #test does not work as expected due to stubbing and output is dependent on the interaction of two classes
-    it 'deducts fare when after completeing a journey' do
+    it 'deducts fare when  completing a journey' do
       subject.add_credit(10)
       station.touch_in(subject)
       station.touch_out(subject)
       expect(subject.check_balance < 10).to eq(true)
     end
 
+    it "shows all the journeys taken on this oyster card when user calls show all" do
+      subject.add_journey(Journey.new("London Bridge"))
+      subject.add_journey(Journey.new("Tower Hill"))
+      subject.add_journey(Journey.new("Clapham"))
+      expect(subject.journey_list.size).to eq 3
+      puts subject.journey_list
+    end
+
+    it "adds another journey to the journey log on the card" do
+      sum = subject.journey_list.size
+      subject.add_journey(journey)
+      expect(subject.journey_list.size).to be > sum
+    end
+
+    it "Calculates the penalty on all the incomplete journeys on the card and displays it; each incomplete journey = 100GBP" do
+      subject.add_journey(Journey.new("London Bridge"))
+      subject.add_journey(Journey.new("Tower Hill"))
+      subject.add_journey(Journey.new("Clapham"))
+      expect(subject.calculate_penalty).to eq 300
+    end
+
+    it "Deducts the penalty on all the incomplete journeys from the balance on the card" do
+      subject.add_journey(Journey.new("London Bridge"))
+      subject.add_journey(Journey.new("Tower Hill"))
+      subject.add_journey(Journey.new("Clapham"))
+      subject.calculate_penalty
+      expect(subject.check_balance).to eq -300
+    end
+
   end
-
-
-
-
-
 
 end
