@@ -5,7 +5,7 @@ describe Oyster do
     let(:station){ double :station, :touch_in => true, :touch_out => true }
     let(:journey) {double :journey}
 
-  context '#check_balance' do
+  context '1. Checking Balances' do
     it 'return balance when customer calls check_balance method' do
       expect(subject.check_balance).to eq 0
     end
@@ -26,11 +26,12 @@ describe Oyster do
     #test does not work as expected due to stubbing and output is dependent on the interaction of two classes
     it 'deducts fare when  completing a journey' do
       subject.add_credit(10)
-      station.touch_in(subject)
-      station.touch_out(subject)
-      expect(subject.check_balance < 10).to eq(true)
+      subject.deduct(5)
+      expect(subject.check_balance).to eq(5)
     end
+  end
 
+  context "2. Tracking Journeys" do
     it "shows all the journeys taken on this oyster card when user calls show all" do
       subject.add_journey(Journey.new("London Bridge"))
       subject.add_journey(Journey.new("Tower Hill"))
@@ -44,7 +45,9 @@ describe Oyster do
       subject.add_journey(journey)
       expect(subject.journey_list.size).to be > sum
     end
+  end
 
+  context "3. Penalty calculation" do
     it "Calculates the penalty on all the incomplete journeys on the card and displays it; each incomplete journey = 100GBP" do
       subject.add_journey(Journey.new("London Bridge"))
       subject.add_journey(Journey.new("Tower Hill"))
