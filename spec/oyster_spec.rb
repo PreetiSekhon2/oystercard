@@ -2,7 +2,7 @@ require 'oyster.rb'
 require 'journey.rb'
 
 describe Oyster do
-    let(:station){ double :station, :touch_in => true, :touch_out => true }
+    let(:station) {double :station, :touch_in => true, :touch_out => true }
     let(:journey) {double :journey}
 
   context '1. Checking Balances' do
@@ -64,5 +64,48 @@ describe Oyster do
     end
 
   end
+
+
+    context "1. Customer Touch in / out" do
+      it 'Allows customer to touch in' do
+        expect(subject.touch_in(card_high_balance)).to eq(true)
+      end
+
+      it 'Allows customer to touch out' do
+        card2 = Oyster.new
+        card2.add_credit(20)
+        subject.touch_in(card2)
+        expect(subject.touch_out(card2)).to eq(true)
+      end
+
+      it 'Does NOT allow customer to touch out if there was no proper touch in' do
+        card2 = Oyster.new
+        card2.add_credit(20)
+        expect{subject.touch_out(card2)}.to raise_error("ERROR! no journey found")
+      end
+    end
+
+    context "2. Checking fares / balances" do
+      it 'Allows customer to touch out and show the amount deducted for the journey' do
+        card2 = Oyster.new
+        card2.add_credit(20)
+        subject.touch_in(card2)
+        Station.new("Camden").touch_out(card2)
+        expect(card2.check_balance).to eq(19)
+      end
+
+      it 'should not allow to touch in if balance on card is below min fare (5)' do
+        expect{ subject.touch_in(card_low_balance) }.to raise_error('Insufficient funds.')
+      end
+    end
+
+    context "display station of journey start" do
+      it 'should show passenger the zone of the station' do
+        subject = Station.new("Temple")
+        expect(subject.show_zone).to eq 1
+      end
+    end
+
+
 
 end
