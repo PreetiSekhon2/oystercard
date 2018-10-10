@@ -2,7 +2,6 @@ require "journey"
 
 describe Journey do
 
-
   let(:station)  {double :station, :name => "Camden", :zone => 1}
   let(:station1)  {double :station, :name => "Barbican", :zone => 1}
   let(:station2)  {double :station2, :name => "Clapham", :zone => 3}
@@ -22,6 +21,7 @@ describe Journey do
     it "shows a journey is INCOMPLETE when destination is missing" do
       expect(journey.complete?).to eq(false)
     end
+
   end
 
   context "2. Fare calculation checks" do

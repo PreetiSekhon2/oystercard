@@ -2,9 +2,8 @@ require 'station'
 
 class CalculateFare
 
-  def initialize(minfare = 6)
-    @MIN_FARE = minfare
-  end
+  MIN_FARE = 6
+  PENALTY_FARE = 50
 
   def return_minimum
     @MIN_FARE
@@ -19,6 +18,10 @@ class CalculateFare
       when 3 then fare = 9
       else @fare = 10
     end
+  end
+
+  def calculate_penalty(incomplete_journeys)
+    incomplete_journeys * PENALTY_FARE
   end
 
 end

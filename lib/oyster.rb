@@ -1,3 +1,4 @@
+require "calculatefare.rb"
 class Oyster
 
 attr_reader :journey_list
@@ -7,7 +8,6 @@ attr_reader :journey_list
     @upper_limit = upper_limit
     @journey_list = []
     @calculatefare = CalculateFare.new
-
   end
 
   def check_balance
@@ -15,7 +15,7 @@ attr_reader :journey_list
   end
 
   def touch_in(station)
-    raise('Insufficient funds.') unless @balance >= @calculatefare.return_minimum
+    raise('Insufficient funds') unless @balance >= @calculatefare.return_minimum
     add_journey(Journey.new(self))
     true
   end
@@ -49,13 +49,12 @@ attr_reader :journey_list
     @journey_list << journey
   end
 
-  def calculate_penalty
+  def deduct_penalty
     incomplete_journeys = 0
     @journey_list.each  do |journey|
       incomplete_journeys +=1 if journey.complete? == false
     end
-    deduct(incomplete_journeys * 100)
-    incomplete_journeys * 100
+    @calculatefare.calculate_penalty(incomplete_journeys)
   end
 
 end
