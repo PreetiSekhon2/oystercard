@@ -6,7 +6,11 @@ class CalculateFare
   PENALTY_FARE = 50
 
   def return_minimum
-    @MIN_FARE
+    MIN_FARE
+  end
+
+  def return_penalty
+    PENALTY_FARE
   end
 
   def calculate_fare(start_journey, end_journey)

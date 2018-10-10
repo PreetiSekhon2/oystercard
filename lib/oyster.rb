@@ -16,7 +16,7 @@ attr_reader :journey_list
 
   def touch_in(station)
     raise('Insufficient funds') unless @balance >= @calculatefare.return_minimum
-    add_journey(Journey.new(self))
+    add_journey(Journey.new(station))
     true
   end
 

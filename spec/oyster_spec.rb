@@ -1,8 +1,8 @@
 require 'oyster.rb'
 
 describe Oyster do
-    let(:station) {double :station, :show_zone => 1 }
-    let(:station2) {double :station2 }
+    let(:station) {double :station, :name => "Clapham", :zone => 1 }
+    let(:station2) {double :station, :name => "Camden", :zone => 3}
     let(:journey1) {double :journey, :complete? => false}
     let(:journey2) {double :journey, :complete? => false}
     let(:journey3) {double :journey, :complete? => false}
@@ -32,15 +32,17 @@ describe Oyster do
       expect(oyster.check_balance).to eq(5)
     end
 
+
+#REQUIRE
     it 'allows customer to touch out and show the amount deducted for the journey' do
       oyster.add_credit(20)
       oyster.touch_in(station)
       oyster.touch_out(station2)
-      expect(oyster.check_balance).to eq(19)
+      expect(oyster.check_balance).to eq(12)
     end
 
     it 'should not allow to touch in if balance on card is below min fare (5)' do
-      expect{ oyster.touch_in(station) }.to raise_error('Insufficient funds.')
+      expect{ oyster.touch_in(station) }.to raise_error('Insufficient funds')
     end
   end
 
@@ -58,10 +60,13 @@ describe Oyster do
       expect(oyster.journey_list.size).to be > sum
     end
 
+#REQUIRE
     it 'Allows customer to touch in' do
+      oyster.add_credit(20)
       expect(oyster.touch_in(station)).to eq(true)
     end
 
+#REQUIRE
     it 'Allows customer to touch out' do
       oyster.add_credit(20)
       oyster.touch_in(station)
